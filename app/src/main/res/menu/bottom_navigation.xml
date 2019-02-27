@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_passenger"
+        android:icon="@drawable/ic_person_pin_circle_black_24dp"
+        android:title="Passenger" />
+
+    <item
+        android:id="@+id/nav_driver"
+        android:icon="@drawable/ic_directions_car_black_24dp"
+        android:title="Driver" />
+</menu>
