@@ -95,7 +95,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyHode
                     String str = pickup.getLocation();
                     String[] lArr = str.substring(10, str.length()-1).split(",");
 
-                    Uri gmmIntentUri = Uri.parse("google.navigation:q="+Double.valueOf(lArr[0]+Double.valueOf(lArr[1])));
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=");
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     context.startActivity(mapIntent);

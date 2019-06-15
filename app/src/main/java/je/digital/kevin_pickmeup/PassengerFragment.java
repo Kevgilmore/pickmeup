@@ -33,7 +33,7 @@ public class PassengerFragment extends Fragment {
 
     LatLng centre;
 
-    LatLng dj = new LatLng(49.182399, -2.102213);
+    LatLng myLocation = new LatLng(49.182399, -2.102213);
 
     ImageView iv;
 
@@ -54,24 +54,23 @@ public class PassengerFragment extends Fragment {
 
         // creates the map using the mapFragment object
         mapFragment.getMapAsync(new OnMapReadyCallback() {
+
             @Override
             public void onMapReady(final GoogleMap googleMap) {
 
                 map = googleMap; //saves the map to be used in other functions
 
+                //start here
                 map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                map.getUiSettings().setCompassEnabled(false);
-                map.clear(); //clears any old markers
-
-                // sets cam position somewhere over jersey
-                CameraPosition island = CameraPosition.builder()
-                        .target(dj)
+                map.getUiSettings().setCompassEnabled(true);
+                CameraPosition overMe = CameraPosition.builder()
+                        .target(myLocation)
                         .zoom(14)
                         .bearing(0)
                         .tilt(10)
                         .build();
-
-                map.animateCamera(CameraUpdateFactory.newCameraPosition(island), 100, null);
+                map.animateCamera(CameraUpdateFactory.
+                newCameraPosition(overMe),100,null);
 
                 // updates the centre location when dragging the map
                 map.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
@@ -88,6 +87,7 @@ public class PassengerFragment extends Fragment {
         return rootView;
     }
 
+
     // this runs AFTER the view is loaded (sets up buttons etc)
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -97,14 +97,13 @@ public class PassengerFragment extends Fragment {
         mainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isPickupRequested) {
-                    requestPickup(v);
+                //start here
+                if ( !isPickupRequested ){
                     mainBtn.setText("CANCEL REQUEST");
-                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(dj, 17));
-                }
-                else if (isPickupRequested) {
-                    cancelPickup(v);
+                    requestPickup(v);
+                } else if ( isPickupRequested ) {
                     mainBtn.setText("REQUEST PICKUP");
+                    cancelPickup(v);
                 }
             }
         });
@@ -115,8 +114,9 @@ public class PassengerFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // sets cam position over digital jersey (gps mock)
-                CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(dj, 18);
-                map.animateCamera(yourLocation);
+
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation,18));
+
             }
         });
 
@@ -125,9 +125,6 @@ public class PassengerFragment extends Fragment {
     }
 
     public void requestPickup(View view) {
-        pickup = new Pickup(dj.toString());
-        saveToFirebase(pickup);
-
         // clears any old markers
         map.clear();
 
@@ -140,6 +137,9 @@ public class PassengerFragment extends Fragment {
 
         //sets the marker variable to true
         isPickupRequested = true;
+
+        //save to firebase
+        saveToFirebase(new Pickup(myLocation.toString()));
     }
 
     public void cancelPickup(View view) {
@@ -158,6 +158,6 @@ public class PassengerFragment extends Fragment {
     }
 
     public void removeFromFirebase(Pickup pickup) {
-        mRef.child("Pickups").child(pickup.getId()).removeValue();
+        //mRef.child("Pickups").child(pickup.getId()).removeValue();
     }
 }
